@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
-use crate::measurement::{AddressFamily, Protocol};
+use crate::measurement::{AddressFamily, Protocol, Response};
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "strict", serde(deny_unknown_fields))]
@@ -28,7 +28,7 @@ pub struct Ntp<'a> {
     #[serde(rename = "ref-ts")]
     pub ref_ts: Option<f64>,
     /// results of query (array of objects)
-    pub result: Vec<NtpResult<'a>>,
+    pub result: Vec<Response<'a, NtpReply<'a>>>,
     /// round-trip delay from server to stratum 0 time source in seconds (float)
     #[serde(rename = "root-delay")]
     pub root_delay: Option<f64>,
@@ -40,27 +40,10 @@ pub struct Ntp<'a> {
     /// NTP protocol version (int)
     pub version: Option<i32>,
 
-
-
-
     /// IP address of the destination (string)
     pub dst_addr: Option<Cow<'a, str>>,
 }
 
-#[derive(Clone, Serialize, Deserialize, Debug)]
-#[serde(untagged)]
-#[cfg_attr(feature = "strict", serde(deny_unknown_fields))]
-pub enum NtpResult<'a> {
-    Timeout {
-        /// "*" (string)
-        x: Cow<'a, str>,
-    },
-    Error {
-        // description of error (string)
-        error: Cow<'a, str>,
-    },
-    Reply(NtpReply<'a>)
-}
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "strict", serde(deny_unknown_fields))]

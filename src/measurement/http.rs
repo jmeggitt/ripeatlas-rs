@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
-use crate::measurement::{AddressFamily,  UnixTimestamp};
+use crate::measurement::{AddressFamily, Response, UnixTimestamp};
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "strict", serde(deny_unknown_fields))]
@@ -8,21 +8,9 @@ pub struct Http<'a> {
     /// request uri (string)
     pub uri: Cow<'a, str>,
     /// results of query (array of objects)
-    pub result: Vec<HttpResult<'a>>,
+    pub result: Vec<Response<'a, HttpReply<'a>>>,
     /// [optional] time to resolve the DNS name (in milli seconds) (float)
     pub ttr: Option<f64>,
-}
-
-
-#[derive(Clone, Serialize, Deserialize, Debug)]
-#[serde(untagged)]
-#[cfg_attr(feature = "strict", serde(deny_unknown_fields))]
-pub enum HttpResult<'a> {
-    DnsError {
-        /// [optional] DNS resolution failed (string)
-        dnserr: Cow<'a, str>,
-    },
-    Reply(HttpReply<'a>),
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug)]

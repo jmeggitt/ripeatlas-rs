@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
-use crate::measurement::{AddressFamily, Protocol};
+use crate::measurement::{AddressFamily, Protocol, Response};
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "strict", serde(deny_unknown_fields))]
@@ -26,7 +26,7 @@ pub struct Ping<'a> {
     /// number of packets received (int)
     pub rcvd: u32,
     /// variable content, depending on type of response (array of objects)
-    pub result: Vec<PingResponse<'a>>,
+    pub result: Vec<Response<'a, PingReply<'a>>>,
     /// number of packets sent (int)
     pub sent: u32,
     /// packet size (data part, not including IP and ICMP header) (int)
@@ -37,20 +37,6 @@ pub struct Ping<'a> {
     pub step: Option<i32>,
 }
 
-#[derive(Clone, Serialize, Deserialize, Debug)]
-#[serde(untagged)]
-#[cfg_attr(feature = "strict", serde(deny_unknown_fields))]
-pub enum PingResponse<'a> {
-    Timeout {
-        /// Always "*"
-        x: Cow<'a, str>,
-    },
-    Error {
-        /// description of error (string)
-        error: Cow<'a, str>,
-    },
-    Reply(PingReply<'a>),
-}
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "strict", serde(deny_unknown_fields))]

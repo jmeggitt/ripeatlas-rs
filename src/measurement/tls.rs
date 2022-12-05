@@ -21,7 +21,7 @@ pub struct Tls<'a> {
     pub dst_port: Cow<'a, str>,
     /// "SSL" or "TLS" (string)
     pub method: Option<Method>,
-    /// [optional] response time in milli seconds from starting to connect to receving the
+    /// [optional] response time in milli seconds from starting to connect to receiving the
     /// certificates (float)
     pub rt: Option<f64>,
     /// [optional] cipher selected by server as a hexadecimal number (string)

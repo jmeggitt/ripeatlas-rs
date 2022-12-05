@@ -22,11 +22,14 @@ pub type NtpMeasurement<'a> = Measurement<'a, ntp::Ntp<'a>>;
 pub type TlsMeasurement<'a> = Measurement<'a, tls::Tls<'a>>;
 
 
+/// This type contains fields used by general measurements
+///
 #[derive(Clone, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "strict", serde(deny_unknown_fields))]
 pub struct Measurement<'a, T> {
     #[serde(flatten)]
     inner: T,
+    /// Firmware version of the probe
     pub fw: u32,
     /// IP address of the probe as know by controller (string)
     pub from: Cow<'a, str>,
@@ -44,6 +47,7 @@ pub struct Measurement<'a, T> {
     pub msm_name: Cow<'a, str>,
     /// source probe ID (int)
     pub prb_id: i64,
+    ///
     pub src_addr: Option<Cow<'a, str>>,
     #[cfg_attr(feature = "chrono", serde(with = "chrono::serde::ts_seconds"))]
     pub timestamp: UnixTimestamp,

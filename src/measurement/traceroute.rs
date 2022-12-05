@@ -2,7 +2,7 @@ use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 use smallvec::{smallvec, SmallVec};
 use std::borrow::Cow;
-use crate::measurement::{AddressFamily, Measurement, Protocol, UnixTimestamp};
+use crate::measurement::{AddressFamily, Measurement, Protocol, Response, UnixTimestamp};
 use crate::serde_utils::{skip_empty_in_vec, digit_to_bool};
 
 /// https://atlas.ripe.net/docs/apis/result-format/#version-4570
@@ -42,7 +42,7 @@ pub enum TraceHop<'a> {
     Result {
         hop: u32,
         #[serde(deserialize_with = "skip_empty_in_vec")]
-        result: Vec<TraceHopResponse<'a>>,
+        result: Vec<Response<'a, TraceReply<'a>>>,
     },
 }
 
@@ -55,31 +55,15 @@ impl<'a> TraceHop<'a> {
         };
 
         responses.filter_map(|x| match x {
-            TraceHopResponse::Reply(y) => Some(y),
+            Response::Reply(y) => Some(y),
             _ => None,
         })
     }
 }
 
-#[derive(Clone, Serialize, Deserialize, Debug)]
-#[serde(untagged)]
-#[cfg_attr(feature = "strict", serde(deny_unknown_fields))]
-pub enum TraceHopResponse<'a> {
-    Timeout {
-        /// Always "*"
-        x: Cow<'a, str>,
-    },
-    Error {
-        /// The specification does not include this, but it sometimes comes up if a connectivity
-        /// type error comes up mid-run.
-        error: Cow<'a, str>,
-    },
-    Reply(TraceReply<'a>),
-}
-
-impl<'a> TraceHopResponse<'a> {
+impl<'a> Response<'a, TraceReply<'a>> {
     pub fn rtt(&self) -> Option<f32> {
-        if let TraceHopResponse::Reply(TraceReply { rtt, .. }) = self {
+        if let Response::Reply(TraceReply { rtt, .. }) = self {
             return match rtt {
                 RoundTripTime::OnTime(x) => Some(*x),
                 RoundTripTime::Late(_) => None,
@@ -260,7 +244,7 @@ impl<'a> Iterator for TracerouteIPIter<'a> {
                 let mut unique_ips: SmallVec<[&str; 3]> = result
                     .iter()
                     .filter_map(|x| match x {
-                        TraceHopResponse::Reply(TraceReply { from, .. }) => Some(from.as_ref()),
+                        Response::Reply(TraceReply { from, .. }) => Some(from.as_ref()),
                         _ => None,
                     })
                     .collect();

@@ -3,7 +3,7 @@ use std::path::Path;
 use serde::Deserialize;
 use ripeatlas::measurement::{DnsMeasurement, HttpMeasurement, NtpMeasurement, PingMeasurement, TlsMeasurement};
 use crate::common::bzip2::BzipDecoderStream;
-use crate::common::{debug_read, debug_read_rayon};
+use crate::common::debug_read_rayon;
 
 mod common;
 
