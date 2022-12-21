@@ -1,9 +1,12 @@
-use std::io::BufReader;
-use std::path::Path;
-use serde::Deserialize;
-use ripeatlas::measurement::{DnsMeasurement, HttpMeasurement, NtpMeasurement, PingMeasurement, TlsMeasurement};
+#![cfg(feature = "format_check")]
 use crate::common::bzip2::BzipDecoderStream;
 use crate::common::debug_read_rayon;
+use ripeatlas::measurement::{
+    DnsMeasurement, HttpMeasurement, NtpMeasurement, PingMeasurement, TlsMeasurement,
+};
+use serde::Deserialize;
+use std::io::BufReader;
+use std::path::Path;
 
 mod common;
 

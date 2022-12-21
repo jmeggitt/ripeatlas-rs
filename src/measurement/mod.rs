@@ -1,18 +1,14 @@
+use crate::general::UnixTimestamp;
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 use std::ops::Deref;
 
-mod general;
-
-pub mod traceroute;
 pub mod dns;
-pub mod ping;
 pub mod http;
 pub mod ntp;
+pub mod ping;
 pub mod tls;
-
-pub use general::*;
-
+pub mod traceroute;
 
 pub type TracerouteMeasurement<'a> = Measurement<'a, traceroute::Traceroute<'a>>;
 pub type DnsMeasurement<'a> = Measurement<'a, dns::Dns<'a>>;
@@ -20,7 +16,6 @@ pub type PingMeasurement<'a> = Measurement<'a, ping::Ping<'a>>;
 pub type HttpMeasurement<'a> = Measurement<'a, http::Http<'a>>;
 pub type NtpMeasurement<'a> = Measurement<'a, ntp::Ntp<'a>>;
 pub type TlsMeasurement<'a> = Measurement<'a, tls::Tls<'a>>;
-
 
 /// This type contains fields used by general measurements
 ///
@@ -76,4 +71,21 @@ impl<'a, T> Deref for Measurement<'a, T> {
     }
 }
 
-
+#[derive(Clone, Serialize, Deserialize, Debug)]
+#[serde(untagged)]
+#[cfg_attr(feature = "strict", serde(deny_unknown_fields))]
+pub enum Response<'a, T> {
+    Timeout {
+        /// Always "*"
+        x: Cow<'a, str>,
+    },
+    Error {
+        /// description of error (string)
+        error: Cow<'a, str>,
+    },
+    DnsError {
+        /// DNS resolution failed (string)
+        dnserr: Cow<'a, str>,
+    },
+    Reply(T),
+}

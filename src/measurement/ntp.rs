@@ -1,6 +1,7 @@
+use crate::general::{AddressFamily, Protocol};
+use crate::measurement::Response;
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
-use crate::measurement::{AddressFamily, Protocol, Response};
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "strict", serde(deny_unknown_fields))]
@@ -43,7 +44,6 @@ pub struct Ntp<'a> {
     /// IP address of the destination (string)
     pub dst_addr: Option<Cow<'a, str>>,
 }
-
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "strict", serde(deny_unknown_fields))]

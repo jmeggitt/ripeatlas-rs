@@ -1,6 +1,7 @@
+use crate::general::{AddressFamily, UnixTimestamp};
+use crate::measurement::Response;
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
-use crate::measurement::{AddressFamily, Response, UnixTimestamp};
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "strict", serde(deny_unknown_fields))]
@@ -56,7 +57,6 @@ pub struct HttpReply<'a> {
     pub ver: Option<Cow<'a, str>>,
 }
 
-
 #[derive(Copy, Clone, Serialize, Deserialize, Debug)]
 pub enum Method {
     GET,
@@ -72,7 +72,3 @@ pub struct ReadTiming {
     /// time since starting to connect when data is received (in milli seconds) (float)
     pub t: f64,
 }
-
-
-
-

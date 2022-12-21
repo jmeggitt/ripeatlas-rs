@@ -54,12 +54,12 @@ where
 }
 
 pub mod digit_to_bool {
-    use serde::de::{Error, Deserialize, Deserializer};
+    use serde::de::{Deserialize, Deserializer, Error};
     use serde::Serializer;
 
     pub fn deserialize<'de, D>(deserializer: D) -> Result<bool, D::Error>
-        where
-            D: Deserializer<'de>,
+    where
+        D: Deserializer<'de>,
     {
         match u8::deserialize(deserializer)? {
             0 => Ok(false),
@@ -69,8 +69,8 @@ pub mod digit_to_bool {
     }
 
     pub fn serialize<S>(this: &bool, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
+    where
+        S: Serializer,
     {
         match this {
             false => serializer.serialize_u8(0),
@@ -80,9 +80,9 @@ pub mod digit_to_bool {
 }
 
 pub fn one_or_many<'de, D, T>(deserializer: D) -> Result<Vec<T>, D::Error>
-    where
-        D: Deserializer<'de>,
-        T: Deserialize<'de>,
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
 {
     #[derive(Deserialize)]
     #[serde(untagged)]

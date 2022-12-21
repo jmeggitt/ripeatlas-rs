@@ -1,9 +1,9 @@
+use crate::general::{AddressFamily, Protocol};
+use crate::serde_utils::one_or_many;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use std::borrow::Cow;
 use std::collections::HashMap;
-use serde_json::Value;
-use crate::measurement::{AddressFamily, Protocol};
-use crate::serde_utils::one_or_many;
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "strict", serde(deny_unknown_fields))]
@@ -61,7 +61,6 @@ pub struct DNSResponse<'a> {
     qt: Option<f32>,
 }
 
-
 #[derive(Clone, Serialize, Deserialize, Debug)]
 #[serde(tag = "TYPE", rename_all = "UPPERCASE")]
 #[cfg_attr(feature = "strict", serde(deny_unknown_fields))]
@@ -83,14 +82,10 @@ pub enum DNSRecord<'a> {
     },
 }
 
-
-
 #[derive(Clone, Serialize, Deserialize, Debug)]
 #[serde(untagged)]
 #[cfg_attr(feature = "strict", serde(deny_unknown_fields))]
 pub enum DNSLookupError<'a> {
-    Timeout {
-        timeout: u64,
-    },
+    Timeout { timeout: u64 },
     Other(HashMap<Cow<'a, str>, Cow<'a, str>>),
 }

@@ -1,18 +1,17 @@
+use format_serde_error::SerdeError;
+use rayon::prelude::*;
+use serde::Deserialize;
+use serde_json::Value;
 use std::io;
 use std::io::BufRead;
 use std::sync::atomic::AtomicU64;
 use std::sync::atomic::Ordering::SeqCst;
-use format_serde_error::SerdeError;
-use serde::Deserialize;
-use serde_json::Value;
-use rayon::prelude::*;
 
 pub mod bzip2;
 
-
 pub fn debug_read<T, R: BufRead>(reader: &mut R) -> io::Result<()>
-    where
-            for<'a> T: Deserialize<'a>,
+where
+    for<'a> T: Deserialize<'a>,
 {
     let mut count = 0;
 
@@ -40,10 +39,9 @@ pub fn debug_read<T, R: BufRead>(reader: &mut R) -> io::Result<()>
 }
 
 pub fn debug_read_rayon<T, R: BufRead + Send>(reader: &mut R) -> io::Result<()>
-    where
-            for<'a> T: Deserialize<'a>,
+where
+    for<'a> T: Deserialize<'a>,
 {
-
     let count = AtomicU64::new(0);
 
     reader
@@ -70,7 +68,9 @@ pub fn debug_read_rayon<T, R: BufRead + Send>(reader: &mut R) -> io::Result<()>
             Ok(())
         })?;
 
-    eprintln!("Finished after successfully parsing {} items", count.load(SeqCst));
+    eprintln!(
+        "Finished after successfully parsing {} items",
+        count.load(SeqCst)
+    );
     Ok(())
 }
-

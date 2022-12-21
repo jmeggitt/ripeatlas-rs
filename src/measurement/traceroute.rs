@@ -1,9 +1,10 @@
+use crate::general::{AddressFamily, Protocol, UnixTimestamp};
+use crate::measurement::{Measurement, Response};
+use crate::serde_utils::{digit_to_bool, skip_empty_in_vec};
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 use smallvec::{smallvec, SmallVec};
 use std::borrow::Cow;
-use crate::measurement::{AddressFamily, Measurement, Protocol, Response, UnixTimestamp};
-use crate::serde_utils::{skip_empty_in_vec, digit_to_bool};
 
 /// https://atlas.ripe.net/docs/apis/result-format/#version-4570
 #[derive(Clone, Serialize, Deserialize, Debug)]

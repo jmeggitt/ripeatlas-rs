@@ -1,6 +1,6 @@
+use crate::general::AddressFamily;
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
-use crate::measurement::AddressFamily;
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "strict", serde(deny_unknown_fields))]
@@ -39,7 +39,6 @@ pub struct Tls<'a> {
     pub dnserr: Option<Cow<'a, str>>,
 }
 
-
 #[derive(Copy, Clone, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "strict", serde(deny_unknown_fields))]
 pub struct Alert {
@@ -54,5 +53,3 @@ pub enum Method {
     SSL,
     TLS,
 }
-
-
